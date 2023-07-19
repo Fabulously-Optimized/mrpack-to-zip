@@ -21,37 +21,6 @@
 <section class="section">
 	<div class="container centre">
 
-		<h3 class="subtitle is-bold">Download from URL</h3>
-
-		<ol>
-			<li>Go to a Modrinth project</li>
-			<li>Right click and copy the address of <b>the green download button</b></li>
-			<li>Click the Download button</li>
-			<li>Wait for the pack to be downloaded</li>
-		</ol>
-
-		<hr>
-		<input
-				id="url-input"
-				class="input"
-				type="text"
-				placeholder="mrpack download URL">
-
-		<button class="button" onclick="downloadButton()">
-			<span class="icon">
-		    	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-				</svg>
-			</span>
-
-			<span>Download</span>
-		</button>
-
-	</div>
-</section>
-<section class="section">
-	<div class="container centre">
-
 		<h3 class="subtitle is-bold">Download latest from project</h3>
 
 		<ol>
@@ -83,6 +52,37 @@
 			</span>
 
 			<span>Download Fabulously Optimized</span>
+		</button>
+
+	</div>
+</section>
+<section class="section">
+	<div class="container centre">
+
+		<h3 class="subtitle is-bold">Download from URL</h3>
+
+		<ol>
+			<li>Go to a Modrinth project</li>
+			<li>Right click and copy the address of <b>the green download button</b></li>
+			<li>Click the Download button</li>
+			<li>Wait for the pack to be downloaded</li>
+		</ol>
+
+		<hr>
+		<input
+				id="url-input"
+				class="input"
+				type="text"
+				placeholder="mrpack download URL">
+
+		<button class="button" onclick="downloadButton()">
+			<span class="icon">
+		    	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+				</svg>
+			</span>
+
+			<span>Download</span>
 		</button>
 
 	</div>
@@ -143,6 +143,7 @@
 
 <footer class="footer">
 	<div class="content">
+		<p>You can also use <code>?project=(project ID)</code> or <code>?url=(url to mrpack)</code> parameters directly.</p>
 		<p><a href="https://github.com/Madis0/mrpack-to-zip">Source code</a></p>
 	</div>
 </footer>

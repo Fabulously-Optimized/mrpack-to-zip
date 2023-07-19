@@ -4,11 +4,25 @@ const progress = document.getElementById("loading-progress");
 const urlInput = document.getElementById("url-input");
 const idInput = document.getElementById("id-input");
 
+const urlParams = new URLSearchParams(window.location.search);
+const urlParam = urlParams.get('url');
+const projectParam = urlParams.get('project');
+
 const fileInput = document.getElementById("file-input");
 const fileName = document.getElementById("file-name");
 
 const mrApi = "https://api.modrinth.com/v2/project/"
 const mrApiGetVersions = "/version"
+
+if(urlParam != 'undefined'){
+  downloadPack(urlParam);
+}
+else if(projectParam == 'fo'){
+  downloadLatestFo();
+}
+else if(projectParam != 'undefined'){
+  downloadLatestPack(projectParam);
+}
 
 function downloadButton() {
   downloadPack(urlInput.value);
