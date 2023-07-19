@@ -18,6 +18,10 @@ function downloadLatestButton() {
   downloadLatestPack(idInput.value);
 }
 
+function downloadLatestFo(){
+  downloadLatestPack("1KVo5zza");
+}
+
 function downloadLocalButton() {
   downloadPackData(fileInput.files[0]);
 }
@@ -59,6 +63,9 @@ function downloadPack(url) {
     return;
   }
 
+  // Show the modal
+  modal.classList.add("is-active");
+
   JSZipUtils.getBinaryContent(url, function (err, data) {
     if (err) {
       throw err; // or handle err
@@ -75,12 +82,9 @@ function updateFileName() {
 }
 
 function downloadPackData(data) {
-  if (fileInput.files.length <= 0) {
+  if (data.length <= 0) {
     return;
   }
-
-  // Show the modal
-  modal.classList.add("is-active");
 
   // Start creating a new zip file
   var newZip = new JSZip();
