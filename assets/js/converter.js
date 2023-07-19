@@ -14,13 +14,13 @@ const fileName = document.getElementById("file-name");
 const mrApi = "https://api.modrinth.com/v2/project/"
 const mrApiGetVersions = "/version"
 
-if(urlParam != 'undefined'){
+if(urlParam != null){
   downloadPack(urlParam);
 }
 else if(projectParam == 'fo'){
   downloadLatestFo();
 }
-else if(projectParam != 'undefined'){
+else if(projectParam != null){
   downloadLatestPack(projectParam);
 }
 
@@ -54,14 +54,14 @@ async function downloadLatestPack(id) {
     alert("An unknown error occurred!");
   }
 
-  if (response == 'undefined') {
+  if (response == null) {
     alert("Server error!");
   }
   let data = await response.json();
 
-  if (data == 'undefined') {
+  if (data == null) {
     alert("Invalid project ID!");
-  } else if (data[0].files[0].url == 'undefined') {
+  } else if (data[0].files[0].url == null) {
     alert("No files found!");
   }
 
