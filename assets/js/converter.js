@@ -60,10 +60,6 @@ function downloadPack() {
       for (const fileIndex in manifest.files) {
         const file = manifest.files[fileIndex];
 
-        if (file.env.client != 'required') {
-          continue;
-        }
-
         newZip.file(file.path, fetch(file.downloads[0]).then(function(f) {
           downloaded += file.fileSize;
           progress.value = downloaded;
