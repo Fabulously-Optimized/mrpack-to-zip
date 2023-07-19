@@ -21,44 +21,54 @@
 <section class="section">
 	<div class="container centre">
 
-		<h3 class="subtitle is-2 is-bold">How to use</h3>
+		<h3 class="subtitle is-bold">Download from URL</h3>
 
 		<ol>
-			<li>Upload a Modrinth pack (.mrpack)</li>
-			<li>Click the Download button, and wait for the pack to be downloaded</li>
+			<li>Go to a Modrinth project</li>
+			<li>Right click and copy the address of <b>the green download button</b></li>
+			<li>Click the Download button</li>
+			<li>Wait for the pack to be downloaded</li>
 		</ol>
 
 		<hr>
-		
-		<div class="file has-name is-boxed">
-			<label class="file-label">
-				<input
-					id="file-input"
-					class="file-input"
-					type="file"
-					name="resume"
-					accept=".mrpack"
-					onchange="updateFileName()">
+			<input
+					id="url-input"
+					class="input"
+					type="text"
+					placeholder="mrpack download URL">
 
-				<span class="file-cta">
-					<span class="file-icon">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-						</svg>
-					</span>
-					<span class="file-label">
-						Choose a file…
-					</span>
-				</span>
-				<span id="file-name" class="file-name">
-					No file selected
-				</span>
-			</label>
-		</div>
+		<button class="button" onclick="downloadButton()">
+			<span class="icon">
+		    	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+				</svg>
+			</span>
 
-		<br>
+			<span>Download</span>
+		</button>
 
-		<button class="button" onclick="downloadPack()">
+	</div>
+</section>
+<section class="section">
+	<div class="container centre">
+
+		<h3 class="subtitle is-bold">Download latest from project</h3>
+
+		<ol>
+			<li>Go to a Modrinth project</li>
+			<li>Copy <b>project ID</b></li>
+			<li>Click the Download button</li>
+			<li>Wait for the pack to be downloaded</li>
+		</ol>
+
+		<hr>
+			<input
+					id="id-input"
+					class="input"
+					type="text"
+					placeholder="Modrinth project ID">
+
+		<button class="button" onclick="downloadLatestButton()">
 			<span class="icon">
 		    	<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -73,7 +83,7 @@
 
 <footer class="footer">
 	<div class="content">
-		<p>Copyright (c) Jamie Mansfield MMXXII</p>
+		<p><a href="Source">https://github.com/Madis0/mrpack-to-zip</a></p>
 	</div>
 </footer>
 
@@ -96,6 +106,7 @@
 
 <script src="./assets/js/FileSaver.min.js"></script>
 <script src="./assets/js/jszip.min.js"></script>
+<script src="./assets/js/jszip-utils.min.js"></script>
 <script src="./assets/js/converter.js"></script>
 
 </body>
