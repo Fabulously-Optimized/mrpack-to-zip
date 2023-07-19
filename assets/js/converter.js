@@ -1,7 +1,11 @@
 const modal = document.getElementById("loading-modal");
 const progress = document.getElementById("loading-progress");
+
 const urlInput = document.getElementById("url-input");
 const idInput = document.getElementById("id-input");
+
+const fileInput = document.getElementById("file-input");
+const fileName = document.getElementById("file-name");
 
 const mrApi = "https://api.modrinth.com/v2/project/"
 const mrApiGetVersions = "/version"
@@ -14,16 +18,20 @@ function downloadLatestButton() {
   downloadLatestPack(idInput.value);
 }
 
+function downloadLocalButton() {
+  downloadPackData(fileInput.files[0]);
+}
+
 async function downloadLatestPack(id) {
   const response = await fetch(mrApi + id + mrApiGetVersions);
 
   try {
     const response = await fetch(mrApi + id + mrApiGetVersions);
-  
-    if (!response.ok) { 
+
+    if (!response.ok) {
       alert("Invalid project ID or server error!");
     }
-  
+
   } catch (error) {
     alert("An unknown error occurred!");
   }
@@ -35,14 +43,12 @@ async function downloadLatestPack(id) {
 
   if (data == 'undefined') {
     alert("Invalid project ID!");
-  }
-  else if(data[0].files[0].url == 'undefined'){
+  } else if (data[0].files[0].url == 'undefined') {
     alert("No files found!");
   }
 
   downloadPack(data[0].files[0].url);
 }
-
 
 function downloadPack(url) {
   if (url.includes("modpack")) {
@@ -53,74 +59,86 @@ function downloadPack(url) {
     return;
   }
 
+  JSZipUtils.getBinaryContent(url, function (err, data) {
+    if (err) {
+      throw err; // or handle err
+    }
+
+    downloadPackData(data);
+  });
+}
+
+function updateFileName() {
+  if (fileInput.files.length > 0) {
+    fileName.textContent = fileInput.files[0].name;
+  }
+}
+
+function downloadPackData(data) {
+  if (fileInput.files.length <= 0) {
+    return;
+  }
+
   // Show the modal
   modal.classList.add("is-active");
 
   // Start creating a new zip file
   var newZip = new JSZip();
 
-  JSZipUtils.getBinaryContent(url, function (err, data) {
-    if (err) {
-      throw err; // or handle err
-    }
+  // Read the zip file, so we can read the manifest
+  JSZip.loadAsync(data)
+    .then(async function (zip) {
 
-    // Read the zip file, so we can read the manifest
-    JSZip.loadAsync(data)
-      .then(async function (zip) {
+      // Read the manifest
+      const manifestRaw = await zip.files['modrinth.index.json'].async('string');
+      const manifest = JSON.parse(manifestRaw);
 
-        // Read the manifest
-        const manifestRaw = await zip.files['modrinth.index.json'].async('string');
-        const manifest = JSON.parse(manifestRaw);
-
-        for (const fileName in zip.files) {
-          const file = zip.files[fileName];
-          if (file.dir) {
-            continue;
-          }
-
-          if (file.name.startsWith("overrides/")) {
-            const properFileName = file.name.substring("overrides/".length);
-            newZip.file(properFileName, file.async('blob'));
-          }
-
-          if (file.name.startsWith("client-overrides/")) {
-            const properFileName = file.name.substring("client-overrides/".length);
-            newZip.file(properFileName, file.async('blob'));
-          }
+      for (const fileName in zip.files) {
+        const file = zip.files[fileName];
+        if (file.dir) {
+          continue;
         }
 
-        var totalFileSize = 0;
-        var downloaded = 0;
-
-        for (const fileIndex in manifest.files) {
-          const file = manifest.files[fileIndex];
-
-          totalFileSize += file.fileSize;
-        }
-        progress.max = totalFileSize;
-
-        const filePromises = [];
-        for (const fileIndex in manifest.files) {
-          const file = manifest.files[fileIndex];
-
-          newZip.file(file.path, fetch(file.downloads[0]).then(function (f) {
-            downloaded += file.fileSize;
-            progress.value = downloaded;
-            return f.blob();
-          }));
+        if (file.name.startsWith("overrides/")) {
+          const properFileName = file.name.substring("overrides/".length);
+          newZip.file(properFileName, file.async('blob'));
         }
 
-        newZip.generateAsync({
-          type: "blob"
-        }).then(function (content) {
-          saveAs(content, manifest['name'] + '-' + manifest['versionId'] + '.zip');
+        if (file.name.startsWith("client-overrides/")) {
+          const properFileName = file.name.substring("client-overrides/".length);
+          newZip.file(properFileName, file.async('blob'));
+        }
+      }
 
-          // Close the modal
-          modal.classList.remove("is-active");
-        });
+      var totalFileSize = 0;
+      var downloaded = 0;
 
+      for (const fileIndex in manifest.files) {
+        const file = manifest.files[fileIndex];
+
+        totalFileSize += file.fileSize;
+      }
+      progress.max = totalFileSize;
+
+      const filePromises = [];
+      for (const fileIndex in manifest.files) {
+        const file = manifest.files[fileIndex];
+
+        newZip.file(file.path, fetch(file.downloads[0]).then(function (f) {
+          downloaded += file.fileSize;
+          progress.value = downloaded;
+          return f.blob();
+        }));
+      }
+
+      newZip.generateAsync({
+        type: "blob"
+      }).then(function (content) {
+        saveAs(content, manifest['name'] + '-' + manifest['versionId'] + '.zip');
+
+        // Close the modal
+        modal.classList.remove("is-active");
       });
-  });
 
-
+    });
 }
