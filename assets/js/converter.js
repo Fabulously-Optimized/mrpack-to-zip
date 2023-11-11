@@ -14,13 +14,11 @@ const fileName = document.getElementById("file-name");
 const mrApi = "https://api.modrinth.com/v2/project/"
 const mrApiGetVersions = "/version"
 
-if(urlParam != null){
+if (urlParam != null) {
   downloadPack(urlParam);
-}
-else if(projectParam == 'fo'){
+} else if (projectParam == 'fo') {
   downloadLatestFo();
-}
-else if(projectParam != null){
+} else if (projectParam != null) {
   downloadLatestPack(projectParam);
 }
 
@@ -32,7 +30,7 @@ function downloadLatestButton() {
   downloadLatestPack(idInput.value);
 }
 
-function downloadLatestFo(){
+function downloadLatestFo() {
   downloadLatestPack("1KVo5zza");
 }
 
@@ -142,11 +140,16 @@ function downloadPackData(data) {
       for (const fileIndex in manifest.files) {
         const file = manifest.files[fileIndex];
 
-        newZip.file(file.path, fetch(file.downloads[0]).then(function (f) {
-          downloaded += file.fileSize;
-          progress.value = downloaded;
-          return f.blob();
-        }));
+        if (file.downloads[0].includes("github.com")) {
+          window.open(file.downloads[0], '_blank');
+        } else {
+          newZip.file(file.path, fetch(file.downloads[0]).then(function (f) {
+            downloaded += file.fileSize;
+            progress.value = downloaded;
+            return f.blob();
+          }));
+        }
+
       }
 
       newZip.generateAsync({
