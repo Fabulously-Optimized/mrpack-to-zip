@@ -12,11 +12,15 @@
 
 <body>
 	<div style="padding: 1em">
-		
+
+		<button id="downloadLatest" style="font-size: 2em;">Download latest</button>
+
 		<ul id="versionsList"></ul>
-		<p><a href="https://www.curseforge.com/minecraft/modpacks/fabulously-optimized/files?showAlphaFiles=show">Older versions</a></p>
-	
-		<p><b>Important:</b> Please allow popups and multiple downloads when asked - sometimes mods must be downloaded separately and placed to the mods folder manually.</p>
+		<p><a href="https://www.curseforge.com/minecraft/modpacks/fabulously-optimized/files?showAlphaFiles=show">Older
+				versions</a></p>
+
+		<p><b>Important:</b> Please allow popups and multiple downloads when asked - sometimes mods must be downloaded
+			separately and placed to the mods folder manually.</p>
 	</div>
 
 	<div id="loading-modal" class="modal">
@@ -38,86 +42,116 @@
 
 	<script>
 		async function loadVersionsFromURL(url) {
-		  try {
-			const response = await fetch(url);
-			const data = await response.json();
-			return data;
-		  } catch (error) {
-			console.error('Error loading data:', error);
-			return null;
-		  }
-		}
-	
-		function getLatestVersionsForAllGameVersions(versions) {
-		  const latestVersionsMap = {};
-	
-		  versions.forEach(version => {
-			const versionGameVersions = version.game_versions; // Assuming multiple game versions in the array
-	
-			versionGameVersions.forEach(gameVersion => {
-			  if (isVersionAllowed(gameVersion) && (!latestVersionsMap[gameVersion] || compareVersions(version.version_number, latestVersionsMap[gameVersion].version_number) > 0)) {
-				latestVersionsMap[gameVersion] = version;
-			  }
-			});
-		  });
-	
-		  const sortedVersions = Object.values(latestVersionsMap).sort((a, b) => compareVersions(b.version_number, a.version_number));
-      	  return sortedVersions;
-		}
-	
-		function isVersionAllowed(version) {
-		  const allowedFromVersion = '1.19.4';
-		  return compareVersions(version, allowedFromVersion) >= 0;
-		}
-	
-		function compareVersions(a, b) {
-		  const aParts = a.split('.').map(part => parseInt(part));
-		  const bParts = b.split('.').map(part => parseInt(part));
-	
-		  for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-			const partA = aParts[i] || 0;
-			const partB = bParts[i] || 0;
-	
-			if (partA > partB) return 1;
-			if (partA < partB) return -1;
-		  }
-	
-		  return 0;
-		}
-	
-		function printVersionsAsHTML(versions) {
-		  const versionsList = document.getElementById('versionsList');
-	
-		  versions.forEach(version => {
-			const listItem = document.createElement('li');
-			const button = document.createElement('button');
-			const versionName = version.name;
-			button.textContent = versionName;
-			button.onclick = () => downloadPack(version.files[0].url); // Assuming always one file in files array
-			listItem.appendChild(button);
-			versionsList.appendChild(listItem);
-		  });
-		}
-	
-		function downloadPack(url) {
-		  // Function to handle downloading the pack from the provided URL
-		  console.log('Downloading pack from:', url);
-		  // You can add logic to trigger the download here
-		}
-	
-		const jsonURL = 'https://api.modrinth.com/v2/project/1KVo5zza/version';
-	
-		loadVersionsFromURL(jsonURL)
-		  .then(data => {
-			if (data) {
-			  const latestVersionsForAllGameVersions = getLatestVersionsForAllGameVersions(data);
-			  printVersionsAsHTML(latestVersionsForAllGameVersions);
-			} else {
-			  console.error('Failed to load data');
+			try {
+				const response = await fetch(url);
+				const data = await response.json();
+				return data;
+			} catch (error) {
+				console.error('Error loading data:', error);
+				return null;
 			}
-		  })
-		  .catch(error => console.error('Error:', error));
-	  </script>
+		}
+
+		function getLatestVersionsForAllGameVersions(versions) {
+			const latestVersionsMap = {};
+
+			versions.forEach(version => {
+				const versionGameVersions = version.game_versions; // Assuming multiple game versions in the array
+
+				versionGameVersions.forEach(gameVersion => {
+					if (isVersionAllowed(gameVersion) && (!latestVersionsMap[gameVersion] || compareVersions(
+							version.version_number, latestVersionsMap[gameVersion].version_number) > 0)) {
+						latestVersionsMap[gameVersion] = version;
+					}
+				});
+			});
+
+			const sortedVersions = Object.values(latestVersionsMap).sort((a, b) => compareVersions(b.version_number, a
+				.version_number));
+			return sortedVersions;
+		}
+
+		function isVersionAllowed(version) {
+			const allowedFromVersion = '1.19.4';
+			return compareVersions(version, allowedFromVersion) >= 0;
+		}
+
+		function compareVersions(a, b) {
+			const aParts = a.split('.').map(part => parseInt(part));
+			const bParts = b.split('.').map(part => parseInt(part));
+
+			for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+				const partA = aParts[i] || 0;
+				const partB = bParts[i] || 0;
+
+				if (partA > partB) return 1;
+				if (partA < partB) return -1;
+			}
+
+			return 0;
+		}
+
+		function printVersionsAsHTML(versions) {
+			const versionsList = document.getElementById('versionsList');
+
+			versions.forEach(version => {
+				const listItem = document.createElement('li');
+				const button = document.createElement('button');
+				const versionName = version.name;
+				button.textContent = versionName;
+				button.onclick = () => downloadPack(version.files[0].url); // Assuming always one file in files array
+				listItem.appendChild(button);
+				versionsList.appendChild(listItem);
+			});
+		}
+
+		function downloadPack(url) {
+			// Function to handle downloading the pack from the provided URL
+			console.log('Downloading pack from:', url);
+			// You can add logic to trigger the download here
+		}
+
+		const jsonURL = 'https://api.modrinth.com/v2/project/1KVo5zza/version';
+
+		urlParams = new URLSearchParams(window.location.search);
+		const downloadParam = urlParams.get('download');
+		const downloadLatestButtonVanilla = document.getElementById('downloadLatest');
+
+		loadVersionsFromURL(jsonURL)
+			.then(data => {
+				if (data) {
+					let versionsToDisplay = getLatestVersionsForAllGameVersions(data);
+
+					printVersionsAsHTML(versionsToDisplay);
+
+					if (downloadParam === 'latest') {
+						// Download the first (newest) item
+						downloadPack(versionsToDisplay[0].files[0].url);
+					} else if (downloadParam) {
+						// Download specific version based on query parameter
+						const foundVersion = versionsToDisplay.find(version => version.game_versions[0] === downloadParam);
+						if (foundVersion) {
+							downloadPack(foundVersion.files[0].url);
+						} else {
+							alert('Requested version not found');
+						}
+					}
+
+					downloadLatestButtonVanilla.addEventListener('click', () => {
+						if (versionsToDisplay.length > 0) {
+							downloadPack(versionsToDisplay[0].files[0].url);
+						} else {
+							alert('No versions available to download');
+						}
+					});
+				} else {
+					console.error('Failed to load data');
+				}
+			})
+			.catch(error => console.error('Error:', error));
+
+			
+	</script>
 
 	<script src="./assets/js/FileSaver.min.js"></script>
 	<script src="./assets/js/jszip.min.js"></script>
