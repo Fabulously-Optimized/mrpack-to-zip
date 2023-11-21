@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Vanilla versions</title>
+
+	<link rel="stylesheet" href="./assets/css/bulma.min.css">
+</head>
+
+<body>
+	<div style="padding: 1em">
+		
+		<ul id="versionsList"></ul>
+		<p><a href="https://www.curseforge.com/minecraft/modpacks/fabulously-optimized/files?showAlphaFiles=show">Older versions</a></p>
+	
+		<p><b>Important:</b> Please allow popups and multiple downloads when asked - sometimes mods must be downloaded separately and placed to the mods folder manually.</p>
+	</div>
+
+	<div id="loading-modal" class="modal">
+		<div class="modal-background"></div>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">Downloading pack</p>
+			</header>
+			<section class="modal-card-body">
+				<p>
+					Files required for the modpack are currently being downloaded, please wait.
+				</p>
+			</section>
+			<footer class="modal-card-foot">
+				<progress id="loading-progress" class="progress is-primary" value="0" max="100">0%</progress>
+			</footer>
+		</div>
+	</div>
+
+	<script>
+		async function loadVersionsFromURL(url) {
+		  try {
+			const response = await fetch(url);
+			const data = await response.json();
+			return data;
+		  } catch (error) {
+			console.error('Error loading data:', error);
+			return null;
+		  }
+		}
+	
+		function getLatestVersionsForAllGameVersions(versions) {
+		  const latestVersionsMap = {};
+	
+		  versions.forEach(version => {
+			const versionGameVersions = version.game_versions; // Assuming multiple game versions in the array
+	
+			versionGameVersions.forEach(gameVersion => {
+			  if (isVersionAllowed(gameVersion) && (!latestVersionsMap[gameVersion] || compareVersions(version.version_number, latestVersionsMap[gameVersion].version_number) > 0)) {
+				latestVersionsMap[gameVersion] = version;
+			  }
+			});
+		  });
+	
+		  const sortedVersions = Object.values(latestVersionsMap).sort((a, b) => compareVersions(b.version_number, a.version_number));
+      	  return sortedVersions;
+		}
+	
+		function isVersionAllowed(version) {
+		  const allowedFromVersion = '1.19.4';
+		  return compareVersions(version, allowedFromVersion) >= 0;
+		}
+	
+		function compareVersions(a, b) {
+		  const aParts = a.split('.').map(part => parseInt(part));
+		  const bParts = b.split('.').map(part => parseInt(part));
+	
+		  for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+			const partA = aParts[i] || 0;
+			const partB = bParts[i] || 0;
+	
+			if (partA > partB) return 1;
+			if (partA < partB) return -1;
+		  }
+	
+		  return 0;
+		}
+	
+		function printVersionsAsHTML(versions) {
+		  const versionsList = document.getElementById('versionsList');
+	
+		  versions.forEach(version => {
+			const listItem = document.createElement('li');
+			const button = document.createElement('button');
+			const versionName = version.name;
+			button.textContent = versionName;
+			button.onclick = () => downloadPack(version.files[0].url); // Assuming always one file in files array
+			listItem.appendChild(button);
+			versionsList.appendChild(listItem);
+		  });
+		}
+	
+		function downloadPack(url) {
+		  // Function to handle downloading the pack from the provided URL
+		  console.log('Downloading pack from:', url);
+		  // You can add logic to trigger the download here
+		}
+	
+		const jsonURL = 'https://api.modrinth.com/v2/project/1KVo5zza/version';
+	
+		loadVersionsFromURL(jsonURL)
+		  .then(data => {
+			if (data) {
+			  const latestVersionsForAllGameVersions = getLatestVersionsForAllGameVersions(data);
+			  printVersionsAsHTML(latestVersionsForAllGameVersions);
+			} else {
+			  console.error('Failed to load data');
+			}
+		  })
+		  .catch(error => console.error('Error:', error));
+	  </script>
+
+	<script src="./assets/js/FileSaver.min.js"></script>
+	<script src="./assets/js/jszip.min.js"></script>
+	<script src="./assets/js/jszip-utils.min.js"></script>
+	<script src="./assets/js/converter.js"></script>
+
+</body>
+
+</html>
