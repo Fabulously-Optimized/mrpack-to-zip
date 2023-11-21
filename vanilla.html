@@ -5,22 +5,62 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Vanilla versions</title>
+	<title>Fabulously Optimized for Minecraft Launcher</title>
 
 	<link rel="stylesheet" href="./assets/css/bulma.min.css">
 </head>
 
 <body>
-	<div style="padding: 1em">
+	<style>
+		#title {
+			padding: 0.5em;
+			font-size: 2em;
+		}
 
-		<button id="downloadLatest" style="font-size: 2em;">Download latest</button>
+		button{
+			min-width: 20vw;
+		}
 
-		<ul id="versionsList"></ul>
-		<p><a href="https://www.curseforge.com/minecraft/modpacks/fabulously-optimized/files?showAlphaFiles=show">Older
-				versions (MultiMC packs)</a></p>
+		#versionListDiv {
+			padding: 1em;
+		}
 
+		#downloadLatest {
+			font-size: 1.5em;
+		}
+
+		#versionsList > li
+		{
+			padding-top: 1em; 
+		}
+
+		#olderVersions {
+			margin-top: 1em;
+		}
+
+		#versionsList > li > button {
+			font-size: 1em;
+		}
+
+		#footer {
+			padding: 1em;
+		}
+	</style>
+
+	<h1 id="title">Fabulously Optimized for Minecraft Launcher</h2>
+	<div id="versionListDiv">
+		<button id="downloadLatest">Download latest</button>
+
+		<ul id="versionsList">
+			
+		</ul>
+		<p><button id="olderVersions" onclick="window.open('https://www.curseforge.com/minecraft/modpacks/fabulously-optimized/files?showAlphaFiles=show')">Older
+			versions</button></p>
+	</div>
+	<div id="footer">
 		<p><b>Important:</b> Please allow popups and multiple downloads when asked - sometimes mods must be downloaded
 			separately and placed to the mods folder manually.</p>
+		<a href="https://wiki.download.fo/readme/install-instructions#minecraft-launcher-vanilla">How to install?</a>
 	</div>
 
 	<div id="loading-modal" class="modal">
@@ -91,6 +131,7 @@
 			return 0;
 		}
 
+
 		function printVersionsAsHTML(versions) {
 			const versionsList = document.getElementById('versionsList');
 
@@ -149,7 +190,6 @@
 				}
 			})
 			.catch(error => console.error('Error:', error));
-
 			
 	</script>
 
