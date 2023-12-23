@@ -117,8 +117,13 @@
 		}
 
 		function compareVersions(a, b) {
-			const aParts = a.split('.').map(part => parseInt(part));
-			const bParts = b.split('.').map(part => parseInt(part));
+			const splitVersion = (version) => {
+				const [main, preRelease] = version.split('-');
+				return [...main.split('.').map(Number), preRelease ? preRelease : ''];
+			};
+
+			const aParts = splitVersion(a);
+			const bParts = splitVersion(b);
 
 			for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
 				const partA = aParts[i] || 0;
@@ -130,7 +135,6 @@
 
 			return 0;
 		}
-
 
 		function printVersionsAsHTML(versions) {
 			const versionsList = document.getElementById('versionsList');
