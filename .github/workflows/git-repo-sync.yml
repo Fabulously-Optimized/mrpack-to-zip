@@ -1,0 +1,27 @@
+name: Git Repo Sync
+
+on: 
+  - push
+  - delete
+
+permissions:
+  contents: write
+
+jobs:
+  sync-bitbucket:
+    if: github.repository_owner == 'Fabulously-Optimized'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    name: Git Repo Sync - BitBucket
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        fetch-depth: 0
+        persist-credentials: false
+    - name: Synchronize code to other Git platforms
+      uses: jauderho/git-repo-sync@6142c9cd8960dadc57d1190506d6c35ac5cee660 # v0.3.0
+      with:
+        target-url: ${{ secrets.BITBUCKET_GIT }}
+        target-username: ${{ secrets.BITBUCKET_USERNAME }}
+        target-token: ${{ secrets.BITBUCKET_API_TOKEN }}
